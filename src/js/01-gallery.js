@@ -1,12 +1,10 @@
-// Додайте імпорти SimpleLightbox та стилів
+// Додавання імпортів SimpleLightbox та стилів
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 // Add imports above this line
 import { galleryItems } from './gallery-items';
 // Change code below this line
-
-console.log(galleryItems);
 
 
 const modalRef = {
@@ -21,6 +19,7 @@ galleryElement.addEventListener("click", onGalleryClick);
 galleryElement.insertAdjacentHTML("beforeend", populateGallery(galleryItems));
 
 function populateGallery(imagesList) {
+  if (!imagesList.length) return ""; // Перевірка на пустий масив
   return imagesList.map(galleryItemLayout).join("");
 }
 
@@ -67,12 +66,21 @@ function createModalInstance(src) {
   const content = modalImageLayout(src);
   const modalInstance = new SimpleLightbox(content, options);
 
-  modalRef.image = modalInstance.element().querySelector("img");
+  modalRef.image = modalInstance.element.querySelector("img");
   modalRef.instance = modalInstance;
 }
 
 function modalImageLayout(src) {
-  return `<img src="${src}" alt="modal" width="1200" height="800">`;
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = "modal";
+  img.width = 1200;
+  img.height = 800;
+
+  const container = document.createElement("div");
+  container.appendChild(img);
+
+  return container;
 }
 
 function onModalClick(e) {
